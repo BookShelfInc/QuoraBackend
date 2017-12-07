@@ -19,7 +19,7 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework_jwt.views import obtain_jwt_token
 
-from action.views import TopicAPIView, AnswerAPIView
+from action.views import TopicAPIView, AnswerAPIView, RegisterAPIView
 from app.views import FeedAPIView, UnansweredQuestionsAPIView, BookmarksAPIView, QuestionsByTopicAPIView, \
     AskQuestionAPIView
 from info.views import TopicsAPIView
@@ -38,5 +38,6 @@ urlpatterns = [
     url(r'^ask/$', AskQuestionAPIView.as_view()),
     url(r'^follow/', include('action.urls')),
     url(r'topic/(?P<id>[0-9]+)/$', TopicAPIView.as_view()),
-    url(r'^answer/$', AnswerAPIView.as_view())
+    url(r'^answer/$', AnswerAPIView.as_view()),
+    url(r'register/$', RegisterAPIView.as_view()),
 ]+ static(MEDIA_URL, document_root=MEDIA_ROOT)

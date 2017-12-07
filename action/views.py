@@ -8,6 +8,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.views import APIView
 from app.models import User, Topic
 from app.serializers import TopicSerializer, AnswerQuestionSerializer
+from info.serializers import UserProfileChangeSerializer
 
 
 class FollowTopicAPIView(APIView):
@@ -43,3 +44,7 @@ class AnswerAPIView(CreateAPIView):
             serializer.save()
             return JsonResponse(serializer.data, status=201)
         return JsonResponse(serializer.errors, status=400)
+
+class RegisterAPIView(CreateAPIView):
+    permission_classes = (AllowAny,)
+    serializer_class = UserProfileChangeSerializer
