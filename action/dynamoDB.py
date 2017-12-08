@@ -8,10 +8,12 @@ def postQuestion(answerId, realQuestionId, answer, userId):
 
     data = {
         "questionId": answerId,
-        "realQuestionId": realQuestionId,
         "answer" :answer,
+        "realQuestionId": realQuestionId,
         "userId": userId
     }
+
+    print(data)
     headers = {'Content-type': 'application/json', 'Access-Control-Allow-Origin': '*'}
 
     r = requests.post(API_ENDPOINT, data=json.dumps(data), headers=headers)
