@@ -7,10 +7,10 @@ def postQuestion(answerId, realQuestionId, answer, userId):
     API_ENDPOINT = getVariable('API_GATEWAY_DYNAMODB')
 
     data = {
-        "questionId": answerId,
-        "answer" :answer,
-        "realQuestionId": realQuestionId,
-        "userId": userId
+        "questionId": str(answerId),
+        "answer": str(answer),
+        "realQuestionId": str(realQuestionId),
+        "userId": str(userId)
     }
 
     print(data)
