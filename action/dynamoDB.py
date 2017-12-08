@@ -3,11 +3,12 @@ import json
 
 from .env_getter import getVariable
 
-def postQuestion(questionId, answer, userId):
+def postQuestion(answerId, realQuestionId, answer, userId):
     API_ENDPOINT = getVariable('API_GATEWAY_DYNAMODB')
 
     data = {
-        "questionId": questionId,
+        "questionId": answerId,
+        "realQuestionId": realQuestionId,
         "answer" :answer,
         "userId": userId
     }

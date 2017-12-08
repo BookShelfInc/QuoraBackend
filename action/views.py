@@ -47,7 +47,9 @@ class AnswerAPIView(CreateAPIView):
             print(serializer.data)
 
             question_id, answer = serializer.data['question'], serializer.data['content']
-            postQuestion(questionId=question_id, answer=answer, userId=request.user.id)
+            ans_id = serializer.data['id']
+            postQuestion(questionId=ans_id, realQuestionId=question_id,
+                         answer=answer, userId=request.user.id)
 
             return JsonResponse(serializer.data, status=201)
         return JsonResponse(serializer.errors, status=400)
