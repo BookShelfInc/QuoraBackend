@@ -44,6 +44,8 @@ class AnswerAPIView(CreateAPIView):
         if(serializer.is_valid()):
             serializer.save()
 
+            print(serializer.data)
+
             question_id, answer = serializer.data['question'], serializer.data['answer']
             postQuestion(questionId=question_id, answer=answer, userId=request.user.id)
 
