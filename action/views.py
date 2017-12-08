@@ -10,6 +10,7 @@ from app.models import User, Topic
 from app.serializers import TopicSerializer, AnswerQuestionSerializer
 from info.serializers import UserProfileChangeSerializer
 
+from .dynamoDB import postQuestion
 
 class FollowTopicAPIView(APIView):
     def post(self, request, *args, **kwargs):
@@ -42,6 +43,10 @@ class AnswerAPIView(CreateAPIView):
         serializer = AnswerQuestionSerializer(data=data)
         if(serializer.is_valid()):
             serializer.save()
+
+            question_id, answer = serializer.data['question'], serializer.data['answer']
+            postQuestion(questionId=question_id, answer=answer, userId=request.user.id)
+
             return JsonResponse(serializer.data, status=201)
         return JsonResponse(serializer.errors, status=400)
 
