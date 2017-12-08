@@ -9,6 +9,8 @@ from rest_framework.parsers import JSONParser
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from action.uploader import uploadImageUser
+from action.avatar_crop_api import cropImage
+from action.env_getter import getVariable
 from app.models import User, Topic, Answer, Question, Bookmark
 from app.serializers import TopicSerializer, AnswerSerializer, QuestionSerializer
 from info.serializers import UserSerializer, UserProfileChangeSerializer, CreateBookmarkSerializer
@@ -89,8 +91,11 @@ def uploadImage(request):
     if request.method == 'POST':
         if 'image' in request.FILES:
             photo_path = uploadImageUser(request.FILES['image'])
+            imageName = photo_path.replace(getVariable('s3BucketPath'), '')
+            photo_small_path = getVariable('s3BucketPath') + cropImage(imageName)[1:-1]
+
             user = request.user
-            user.photo = photo_path
+            user.photo = photo_small_path
             user.save()
             return HttpResponse(status=200)
         else:
