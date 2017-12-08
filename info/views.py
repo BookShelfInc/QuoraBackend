@@ -7,6 +7,8 @@ from rest_framework.generics import RetrieveAPIView, ListAPIView, get_object_or_
 from rest_framework.mixins import DestroyModelMixin, UpdateModelMixin, CreateModelMixin
 from rest_framework.parsers import JSONParser
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
+from rest_framework import status
 
 from action.uploader import uploadImageUser
 from action.avatar_crop_api import cropImage
@@ -15,6 +17,7 @@ from app.models import User, Topic, Answer, Question, Bookmark
 from app.serializers import TopicSerializer, AnswerSerializer, QuestionSerializer
 from info.serializers import UserSerializer, UserProfileChangeSerializer, CreateBookmarkSerializer
 
+from action.dynamoDB import getNotifications
 
 class UserAPIView(RetrieveAPIView):
     permission_classes = (AllowAny,)
@@ -100,6 +103,17 @@ def uploadImage(request):
             return HttpResponse(status=200)
         else:
             return HttpResponse(status=404)
+    return HttpResponse(status=400)
+
+
+@api_view(['GET'])
+@csrf_exempt
+@permission_classes([IsAuthenticated, ])
+def getUserNotifications(request, pk):
+    if(request.method == 'GET'):
+        res = getNotifications(userId=pk)
+        print(res)
+        return Response(res, status=status.HTTP_200_OK)
     return HttpResponse(status=400)
 
 

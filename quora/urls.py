@@ -39,4 +39,5 @@ urlpatterns = [
     url(r'topic/(?P<id>[0-9]+)/$', TopicAPIView.as_view()),
     url(r'^answer/$', AnswerAPIView.as_view()),
     url(r'^register/$', RegisterAPIView.as_view()),
+    url(r'^notifications/(?P<id>[0-9]+)/$', RegisterAPIView.as_view()),
 ]+ static(MEDIA_URL, document_root=MEDIA_ROOT)
