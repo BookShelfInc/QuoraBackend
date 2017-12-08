@@ -21,7 +21,7 @@ from rest_framework_jwt.views import obtain_jwt_token
 from action.views import TopicAPIView, AnswerAPIView, RegisterAPIView
 from app.views import FeedAPIView, UnansweredQuestionsAPIView, BookmarksAPIView, QuestionsByTopicAPIView, \
     AskQuestionAPIView
-from info.views import TopicsAPIView
+from info.views import TopicsAPIView, getUserNotifications
 from quora.settings import MEDIA_ROOT, MEDIA_URL
 
 urlpatterns = [
@@ -39,5 +39,5 @@ urlpatterns = [
     url(r'topic/(?P<id>[0-9]+)/$', TopicAPIView.as_view()),
     url(r'^answer/$', AnswerAPIView.as_view()),
     url(r'^register/$', RegisterAPIView.as_view()),
-    url(r'^notifications/(?P<id>[0-9]+)/$', RegisterAPIView.as_view()),
+    url(r'^notifications/(?P<id>[0-9]+)/$', getUserNotifications),
 ]+ static(MEDIA_URL, document_root=MEDIA_ROOT)
