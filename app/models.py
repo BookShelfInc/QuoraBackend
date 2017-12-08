@@ -22,6 +22,9 @@ class User(AbstractUser):
     bio = TextField(null=True, blank=True)
     photo = models.TextField(blank=True, null=True)
 
+    def __str__(self):
+        return self.username + ' ' + str(self.id)
+
 
 class Vote(Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, )
