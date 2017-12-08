@@ -38,7 +38,7 @@ class AnswerAPIView(CreateAPIView):
     def post(self, request, *args, **kwargs):
         data = JSONParser().parse(request)
         data['user'] = request.user.id
-        data['time'] = int(round(time() * 1000))
+        data['time'] = int(round(time()))
         serializer = AnswerQuestionSerializer(data=data)
         if(serializer.is_valid()):
             serializer.save()

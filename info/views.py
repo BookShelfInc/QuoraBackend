@@ -1,11 +1,17 @@
 # Create your views here.
+from django.http import HttpResponse, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework import permissions
-from rest_framework.generics import RetrieveAPIView, ListAPIView, get_object_or_404
-from rest_framework.mixins import DestroyModelMixin, UpdateModelMixin
-from rest_framework.permissions import AllowAny
-from app.models import User, Topic, Answer, Question
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.generics import RetrieveAPIView, ListAPIView, get_object_or_404, CreateAPIView
+from rest_framework.mixins import DestroyModelMixin, UpdateModelMixin, CreateModelMixin
+from rest_framework.parsers import JSONParser
+from rest_framework.permissions import AllowAny, IsAuthenticated
+
+from action.uploader import uploadImageUser
+from app.models import User, Topic, Answer, Question, Bookmark
 from app.serializers import TopicSerializer, AnswerSerializer, QuestionSerializer
-from info.serializers import UserSerializer, UserProfileChangeSerializer
+from info.serializers import UserSerializer, UserProfileChangeSerializer, CreateBookmarkSerializer
 
 
 class UserAPIView(RetrieveAPIView):
@@ -76,9 +82,36 @@ class AnswersByUserAPIView(ListAPIView):
         return Answer.objects.filter(user=self.kwargs['id'])
 
 
+@api_view(['POST',])
+@csrf_exempt
+@permission_classes([IsAuthenticated, ])
+def uploadImage(request):
+    if request.method == 'POST':
+        if 'image' in request.FILES:
+            photo_path = uploadImageUser(request.FILES['image'])
+            user = request.user
+            user.photo = photo_path
+            user.save()
+            return HttpResponse(status=200)
+        else:
+            return HttpResponse(status=404)
+    return HttpResponse(status=400)
+
+
 class QuestionsByUserAPIView(ListAPIView):
     permission_classes = (AllowAny,)
     serializer_class = QuestionSerializer
 
     def get_queryset(self):
         return Question.objects.filter(user=self.kwargs['id'])
+
+class CreateBookmarkAPIView(CreateAPIView):
+    permission_classes = (IsAuthenticated,)
+    def post(self, request, *args, **kwargs):
+        data = JSONParser().parse(request)
+        data['user'] = request.user.id
+        serializer = CreateBookmarkSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=201)
+        return JsonResponse(serializer.errors, status=400)

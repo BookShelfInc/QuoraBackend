@@ -13,10 +13,9 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.conf.urls import url
+from django.conf.urls import url, include
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path, include
 from rest_framework_jwt.views import obtain_jwt_token
 
 from action.views import TopicAPIView, AnswerAPIView, RegisterAPIView
@@ -26,7 +25,7 @@ from info.views import TopicsAPIView
 from quora.settings import MEDIA_ROOT, MEDIA_URL
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    url('admin/', admin.site.urls),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^$', FeedAPIView.as_view()),
     url(r'^unansweredquestions/$', UnansweredQuestionsAPIView.as_view()),
@@ -39,5 +38,5 @@ urlpatterns = [
     url(r'^follow/', include('action.urls')),
     url(r'topic/(?P<id>[0-9]+)/$', TopicAPIView.as_view()),
     url(r'^answer/$', AnswerAPIView.as_view()),
-    url(r'register/$', RegisterAPIView.as_view()),
+    url(r'^register/$', RegisterAPIView.as_view()),
 ]+ static(MEDIA_URL, document_root=MEDIA_ROOT)

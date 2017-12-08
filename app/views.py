@@ -7,7 +7,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from app.models import Question, Bookmark
 from app.paginations import FeedPagination
 from app.serializers import QuestionSerializer, BookmarkSerializer, QuestionCreateSerializer
-from time import time
+import time
 
 
 class FeedAPIView(ListAPIView):
@@ -45,7 +45,7 @@ class AskQuestionAPIView(CreateAPIView):
     def post(self, request, *args, **kwargs):
         data = JSONParser().parse(request)
         data['user'] = request.user.id
-        data['time'] = int(round(time() * 1000))
+        data['time'] = int(round(time.time()))
         serializer = QuestionCreateSerializer(data=data)
         if serializer.is_valid():
             serializer.save()

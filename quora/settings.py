@@ -15,6 +15,8 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 from datetime import timedelta
 
+from action.env_getter import getVariable
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
@@ -42,13 +44,16 @@ INSTALLED_APPS = [
     'corsheaders',
     'app',
     'info',
+    'action',
 ]
+
+DATA_UPLOAD_MAX_NUMBER_FIELDS=None
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -79,8 +84,12 @@ WSGI_APPLICATION = 'quora.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': getVariable('RDS_NAME'),
+        'USER': getVariable('RDS_USER'),
+        'PASSWORD': getVariable('RDS_PASSWORD'),
+        'HOST': getVariable('RDS_HOST'),
+        'PORT': getVariable('RDS_PORT'),
     }
 }
 

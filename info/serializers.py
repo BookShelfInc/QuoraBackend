@@ -1,7 +1,8 @@
 from rest_framework.fields import IntegerField, CharField
 from rest_framework.serializers import ModelSerializer
 
-from app.models import User
+from action.uploader import uploadImageUser
+from app.models import User, Bookmark
 
 
 class UserSerializer(ModelSerializer):
@@ -11,8 +12,8 @@ class UserSerializer(ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'first_name', 'last_name', 'bio', 'avatar',
-                  'count_topics', 'count_following', 'count_followers')
+        fields = ('id', 'first_name', 'last_name', 'bio',
+                  'count_topics', 'count_following', 'count_followers', 'photo')
 
 
 class UserProfileChangeSerializer(ModelSerializer):
@@ -21,8 +22,9 @@ class UserProfileChangeSerializer(ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'username', 'first_name', 'last_name', 'bio', 'password',
+            'username', 'first_name', 'last_name', 'bio', 'password', 'photo', 'email',
         )
+        write_only_fields = ('password',)
 
     def update(self, instance, validated_data):
         password = validated_data.pop('password', None)
@@ -38,3 +40,11 @@ class UserProfileChangeSerializer(ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
         return user
+
+class CreateBookmarkSerializer(ModelSerializer):
+    class Meta:
+        model = Bookmark
+        fields = ('id', 'answer', 'user')
+
+    def create(self, validated_data):
+        return Bookmark.objects.create(**validated_data)

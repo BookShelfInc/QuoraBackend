@@ -17,10 +17,10 @@ class Topic(Model):
 
 
 class User(AbstractUser):
-    avatar = ImageField(upload_to='images/', null=True, blank=True)
     following = ManyToManyField('self', related_name='followers', blank=True, symmetrical=False)
-    topics = ManyToManyField(Topic, related_name='followers', )
+    topics = ManyToManyField(Topic, related_name='followers')
     bio = TextField(null=True, blank=True)
+    photo = models.TextField(blank=True, null=True)
 
 
 class Vote(Model):
@@ -56,7 +56,7 @@ class Answer(Model):
 class Commentary(Model):
     user = ForeignKey(User, on_delete=models.CASCADE, )
     answer = ForeignKey(Answer, on_delete=models.CASCADE, )
-    time = PositiveIntegerField()
+    time = PositiveIntegerField(null=True, blank=True)
 
     class Meta:
         verbose_name_plural = 'Commentaries'
