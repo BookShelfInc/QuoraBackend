@@ -109,9 +109,9 @@ def uploadImage(request):
 @api_view(['GET'])
 @csrf_exempt
 @permission_classes([IsAuthenticated, ])
-def getUserNotifications(request, pk):
+def getUserNotifications(request, id):
     if(request.method == 'GET'):
-        res = getNotifications(userId=pk)
+        res = getNotifications(userId=id)
         print(res)
         return Response(res, status=status.HTTP_200_OK)
     return HttpResponse(status=400)
